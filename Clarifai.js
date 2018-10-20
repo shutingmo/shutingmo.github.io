@@ -6,18 +6,30 @@ const app = new Clarifai.App({
 });
 
 // predict the contents of an image by passing in a url
-app.models.predict("c0c0ac362b03416da06ab3fa36fb58e3", "https://samples.clarifai.com/demographics.jpg").then(
+app.models.predict("c0c0ac362b03416da06ab3fa36fb58e3", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg").then(
   function(response) {
+    var gender = [];
+    var race = [];
     for (i in response.outputs[0].data.regions) {
         x = response.outputs[0].data.regions[i].data.face.gender_appearance.concepts;
         if(x[0].value > x[1].value)
     	{
-         	console.log("Male");
+		gender[i] = "Male";
     	}
     	else
     	{
-         	console.log("Female");
+		gender[i] = "Female";
     	}
+        y = response.outputs[0].data.regions[i].data.face.multicultural_appearance.concepts;
+	race.push(y[0].name);
+    }
+    for(j in gender)
+    {
+        console.log(JSON.stringify(gender[j]));
+    }
+    for(k in race)
+    {
+	console.log(JSON.stringify(race[k]));
     }
   },
   function(err) {
