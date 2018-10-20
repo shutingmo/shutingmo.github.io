@@ -27,7 +27,7 @@ const appClarifai = new Clarifai.App({
   apiKey: '1fb691efd3a74e3cb297b8d3577a6d37'
  });
  
- var urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
+var urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
 // var urls = [];
 
 var gender = [];
@@ -172,25 +172,33 @@ crawl();
 //-----Raymond's server.js code put into a function------
 function loadURL(nextPage)
 {
-    app.use(bodyParser.json());
+    if(!nextPage)
+    {
+        console.log("nextPag is null!")
+    }
+    else
+    {
+        app.use(bodyParser.json());
 
-    app.use('/', express.static(path.join(__dirname, 'dist')));
-
-    app.all('/*', function(req, res) {
-        res.sendFile(path.join(__dirname, 'dist/index.html'));
-    });
-
-    console.log("in loadURL the next page is " + nextPage);
-    var scraper = new Scraper(nextPage);
-
-
-    scraper.scrape(function(image){
-        console.log("\n the image address is " + image.address + "\n");
-        
-        runClarifai(image.address);
-    })
+        app.use('/', express.static(path.join(__dirname, 'dist')));
     
-    app.listen(8080, () => console.log('listening'))
+        app.all('/*', function(req, res) {
+            res.sendFile(path.join(__dirname, 'dist/index.html'));
+        });
+    
+        console.log("in loadURL the next page is " + nextPage);
+        var scraper = new Scraper(nextPage);
+    
+    
+        scraper.scrape(function(image){
+            console.log("\n the image address is " + image.address + "\n");
+            
+            runClarifai(image.address);
+        })
+        
+        app.listen(8080, () => console.log('listening'))
+    }
+    
 };
 //----------end of server.js code-------
 
@@ -206,13 +214,16 @@ function crawl() {
     var nextPage = pagesToVisit.pop();
     
     console.log("the next page is " + nextPage);
-
-    if (nextPage in pagesVisited) {
+    if (!nextPage) {
+        // We're done!
+        console.log('Crawl complete!');
+    } 
+    else if (nextPage in pagesVisited) {
       // We've already visited this page, so repeat the crawl
       crawl();
     } else {
       // New page we haven't visited
-      // loadURL(nextPage);
+    //   loadURL(nextPage);
       visitPage(nextPage, crawl);
     }
   }
