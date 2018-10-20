@@ -18,6 +18,12 @@ var ME = 0;
 var AI = 0;
 var race = [];
 var age = [];
+var U21 = 0;
+var U34 = 0;
+var U44 = 0;
+var U54 = 0;
+var U64 = 0;
+var old = 0;
 for(x in urls)
 {
     app.models.predict("c0c0ac362b03416da06ab3fa36fb58e3", urls[x]).then(
@@ -66,11 +72,38 @@ for(x in urls)
             }
 	    z = response.outputs[0].data.regions[i].data.face.age_appearance.concepts[0].name;
 	    age.push(z);
+	    var a = Number(z);
+	    if(a <= 21)
+	    {
+		U21 += 1;
+	    }
+	    else if( a >= 22 && a <= 34)
+	    {
+		U34 += 1;
+	    }
+	    else if( a >= 35 && a <= 44)
+	    {
+		U44 += 1;
+	    }
+	    else if( a >= 45 && a <= 54)
+	    {
+		U54 += 1;
+	    }
+	    else if( a >= 55 && a <= 64)
+	    {
+		U64 += 1;
+	    }
+	    else if( a >= 65)
+	    {
+		old += 1;
+	    }
         }
+	//gender
 	var malePercent = (male * 100) / (male + female);
 	console.log("Male: " + malePercent + "%");
 	var femalePercent = (female * 100) / (male + female);
 	console.log("Female: " + femalePercent + "%");
+	//race
 	console.log("White: " + (white * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
 	console.log("Black: " + (black * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
 	console.log("Asian: " + (asian * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
@@ -78,10 +111,13 @@ for(x in urls)
 	console.log("American Indian: " + (AI * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
 	console.log("Pacific Islander: " + (PI * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
 	console.log("Middle Eastern: " + (ME * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	for(l in age)
-	{
-	    console.log(age[l]);
-	}
+	//age
+	console.log("21 and Under: " + (U21 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
+	console.log("22 - 34: " + (U34 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
+	console.log("35 - 44: " + (U44 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
+	console.log("45 - 54: " + (U54 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
+	console.log("55 - 64: " + (U64 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
+	console.log("65+ : " + (old * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
       },
       function(err) {
         console.error(err);
