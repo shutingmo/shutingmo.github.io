@@ -9,7 +9,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var URL = require('url-parse');
 
-var START_URL = "https://www.microsoft.com/en-us/";
+var START_URL = "https://www.billboard.com/";
 var SEARCH_WORD = "stemming";
 var MAX_PAGES_TO_VISIT = 5;
 
@@ -47,6 +47,8 @@ crawl();
 
 function loadURL(nextPage)
 {
+    console.log("inside loadURL, next page value is " + nextPage);
+
     app.use(bodyParser.json());
 
     app.use('/', express.static(path.join(__dirname, 'dist')));
@@ -56,13 +58,13 @@ function loadURL(nextPage)
     });
 
     console.log("in loadURL the next page is " + nextPage);
-    var scraper = new Scraper("https://www.microsoft.com/en-us/");
+    var scraper = new Scraper(nextPage);
 
 
     scraper.scrape(function(image){
-        console.log(image.address);
+        console.log("\n the image address is " + image.address + "\n");
+        
     })
-    
     
     app.listen(8080, () => console.log('listening'))
 }
@@ -81,7 +83,8 @@ function crawl() {
     
     console.log("the next page is " + nextPage);
 
-    // loadURL(nextPage);
+    
+    loadURL(nextPage);
 
     if (nextPage in pagesVisited) {
       // We've already visited this page, so repeat the crawl
