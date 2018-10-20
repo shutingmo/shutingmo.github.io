@@ -1,5 +1,6 @@
 
 const Clarifai = require('clarifai');
+const math = require('mathjs')
 
 const app = new Clarifai.App({
  apiKey: '1fb691efd3a74e3cb297b8d3577a6d37'
@@ -103,29 +104,56 @@ for(x in urls)
 	console.log("Male: " + malePercent + "%");
 	var femalePercent = (female * 100) / (male + female);
 	console.log("Female: " + femalePercent + "%");
+	var diff = Math.abs(malePercent - femalePercent);
+	var genderScore = (1 - (diff / 100)) * 100;
+	console.log("Gender Score: " + genderScore);
 	//race
-	console.log("White: " + (white * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	console.log("Black: " + (black * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	console.log("Asian: " + (asian * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	console.log("Hispanic: " + (hispanic * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	console.log("American Indian: " + (AI * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	console.log("Pacific Islander: " + (PI * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
-	console.log("Middle Eastern: " + (ME * 100) / (white + asian + black + hispanic + PI + AI + ME) + "%"); 
+	var whitePercent = (white * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("White: " + whitePercent + "%");
+	var blackPercent = (black * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("Black: " + blackPercent + "%");
+	var asianPercent = (asian * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("Asian: " + asianPercent + "%");
+	var hispanicPercent = (hispanic * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("Hispanic: " + hispanicPercent + "%");
+	var AIPercent = (AI * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("American Indian: " + AIPercent + "%");
+	var PIPercent = (PI * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("Pacific Islander: " + PIPercent + "%");
+	var MEPercent =  (ME * 100) / (white + asian + black + hispanic + PI + AI + ME);
+	console.log("Middle Eastern: " + MEPercent + "%");
+	var std = math.std(whitePercent, blackPercent, asianPercent, hispanicPercent, AIPercent, PIPercent, MEPercent);
+	var raceScore = ((37.8 - std) / 34.3604) * 100;
+	if(raceScore > 100)
+	{
+		raceScore = 100;
+	}
+  raceScore = math.floor((raceScore * 100) / 100);
+	console.log("Race Score: " + raceScore);
 	//age
-	console.log("21 and Under: " + (U21 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
-	console.log("22 - 34: " + (U34 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
-	console.log("35 - 44: " + (U44 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
-	console.log("45 - 54: " + (U54 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
-	console.log("55 - 64: " + (U64 * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
-	console.log("65+ : " + (old * 100) / (U21 + U34 + U44 + U54 + U64 + old) + "%");
+  var U21p = (U21 * 100) / (U21 + U34 + U44 + U54 + U64 + old);
+	console.log("21 and Under: " + U21p + "%");
+  var U34p = (U34 * 100) / (U21 + U34 + U44 + U54 + U64 + old);
+	console.log("22 - 34: " + U34p + "%");
+  var U44p = (U44 * 100) / (U21 + U34 + U44 + U54 + U64 + old);
+	console.log("35 - 44: " + U44p + "%");
+  var U54p = (U54 * 100) / (U21 + U34 + U44 + U54 + U64 + old);
+	console.log("45 - 54: " + U54p + "%");
+  var U64p = (U64 * 100) / (U21 + U34 + U44 + U54 + U64 + old);
+	console.log("55 - 64: " + U64p + "%");
+  var oldp = (old * 100) / (U21 + U34 + U44 + U54 + U64 + old);
+	console.log("65+ : " + oldp + "%");
+	std = math.std(U21p, U34p, U44p, U54p, U64p, oldp);
+	var ageScore = ((40.9 - std) / 34.3604) * 100;
+	if(ageScore > 100)
+	{
+		ageScore = 100;
+	}
+  ageScore = math.floor((ageScore * 100) / 100);
+	console.log("Age Score: " + ageScore);
       },
       function(err) {
         console.error(err);
       }
     );
 }
-
-
-
-
-
