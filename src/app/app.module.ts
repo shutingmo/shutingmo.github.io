@@ -10,6 +10,7 @@ import { RouterModule, Routes} from '@angular/router';
 
 const appRoutes:Routes = [
     {path:'index', component: IndexComponent},
+    {path:'compare', component: CompareComponent},
     {path:'stats', component: StatsComponent},
     {path:'', redirectTo: '/index', pathMatch:'full'},
     {path:'**', redirectTo: '/index', pathMatch:'full'}
