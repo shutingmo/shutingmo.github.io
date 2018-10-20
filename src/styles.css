@@ -238,6 +238,7 @@ a:hover {
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 20px;
+  margin-top: 30px;
 }
 .cards ul {
   width: 80%;
@@ -306,6 +307,10 @@ a:hover {
   font-family: Proxima, sans-serif;
   font-weight: bold;
   color: white;
+}
+
+.last {
+  float: right;
 }
 /* Style the buttons inside the tab */
 .login .tab button {
@@ -440,6 +445,10 @@ a:hover {
   overflow-y: scroll;
 }
 
+.stack {
+  margin-top: 30px;
+}
+
 .compare ul li{
   width: 350px !important;
   margin: 20px auto;
@@ -493,6 +502,10 @@ a:hover {
   width: 80%;
   max-width: 1000px;
   margin: 40px auto;
+}
+
+#loginwrap, #loginwrap2 {
+  display: none;
 }
 
 @media (max-width: 900px) {
