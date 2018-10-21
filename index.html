@@ -1,14 +1,43 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
+<!DOCTYPE html>
+<html>
+  <head>
   <title>ValYou</title>
-  <base href="/">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.png">
-</head>
-<body>
-  <app-root></app-root>
-<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+  <link href="files/reset.min.css" type="text/css" rel="stylesheet" />
+  <link href="files/layout.css" type="text/css" rel="stylesheet" />
+  <link rel="icon" href="assets/favicon.png" />
+  </head>
+  <body>
+    <div class="gradient">
+      <img src="assets/logo.png" style="width: 120px;" alt="Logo" style="margin-bottom: -10px;"/>
+      <h1>ValYou</h1>
+      <p>Providing insight on your website's diversity representation.</p>
+      <form>
+        <input type="text" required placeholder="Enter a company URL (https://example.com)" maxlength="1000"/><br />
+        <button class="button" type="submit">Calculate Score</button>
+      </form>
+      <div style="margin-top: 60px;">
+        <img src="assets/race.png" alt="Race" />
+        <img src="assets/gender.png" alt="Gender" />
+        <img src="assets/age.png" alt="Age" />
+      </div>
+      <h4>Understanding representation matters.<br />We make it easy.</h4>
+    </div>
+    <div class="landing">
+      <h1>What We Do</h1>
+      <div class="foldcontainer">
+        <div class="left">
+          Using a web crawler and the <a href="https://clarifai.com/">Clarifai API</a>, we analyze a website’s images to determine the demographics (race, age, gender) of people featured on a website. Using this information, we calculate scores that assess the website’s overall diversity.
+          <br /><br />
+          These scores can be valuable in crafting a web presence that is more welcoming to all.
+        </div>
+        <div class="right">
+          <img src="assets/people.png" alt="Analysis" />
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <h1>ValYou</h1>
+      <p>Made with ❤️ at HackGT 2018</p>
+    </div>
+  </body>
 </html>
