@@ -41,6 +41,9 @@ async function gender(urls)
       console.log("Male: " + malePercent + "%");
       var femalePercent = (female * 100) / (male + female);
       console.log("Female: " + femalePercent + "%");
+      var diff = Math.abs(malePercent - femalePercent);
+	    var genderScore = (1 - (diff / 100)) * 100;
+	    console.log("Gender Score: " + genderScore);
 }
 
 
