@@ -13,7 +13,7 @@ var cheerio = require('cheerio');
 var URL = require('url-parse');
 
 //-------Code that runs through relative links-------
-var START_URL = "https://en.wikipedia.org/wiki/Jennifer_Lawrence";
+var START_URL = "http://dazedimg.dazedgroup.netdna-cdn.com/900/azure/dazed-prod/1230/8/1238442.jpg";
 var SEARCH_WORD = "stemming";
 var MAX_PAGES_TO_VISIT = 5;
 var pagesVisited = {};
@@ -32,8 +32,8 @@ const appClarifai = new Clarifai.App({
   apiKey: '1fb691efd3a74e3cb297b8d3577a6d37'
  });
  
-// var urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
-var urls = [];
+var urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
+// var urls = [];
 
 var gender = [];
 var male = 0;
@@ -60,7 +60,8 @@ var old = 0;
 
 function runClarifai(urls)
 {
-  // urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
+    urls = [];
+    urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
 
     var urlsLength = urls.length;
 
@@ -80,33 +81,40 @@ function runClarifai(urls)
             var female = 0;
             for(var w = 0; w < urls.length;  w ++)
             {
-                try{
+                console.log("insdie for loop");
+            
+                
                     const response = await app.models.predict("c0c0ac362b03416da06ab3fa36fb58e3", urls[w]);
-
-                    for (i in response.outputs[0].data.regions)
+                    if(err)
                     {
-                        x = response.outputs[0].data.regions[i].data.face.gender_appearance.concepts;
-                        if(x[0].name === "masculine")
+
+                    
+                        console.log("err with predict " + err);
+                    }
+                    else
+                    {
+                        console.log('in try')
+                        for (i in response.outputs[0].data.regions)
                         {
-                            gender.push["Male"];
-                            male += 1;
-                        }
-                        else
-                        {
-                            gender.push["Female"];
-                            female += 1;
+                            x = response.outputs[0].data.regions[i].data.face.gender_appearance.concepts;
+                            if(x[0].name === "masculine")
+                            {
+                                gender.push["Male"];
+                                male += 1;
+                            }
+                            else
+                            {
+                                gender.push["Female"];
+                                female += 1;
+                            }
                         }
                     }
-                }
-                catch(err)
-                {
-
+                   
                 
-                    console.log("err with predict " + err);
-                }
+                
                 
             }
-
+            
             var malePercent = (male * 100) / (male + female + w - w);
             console.log("Male: " + malePercent + "%");
             var femalePercent = (female * 100) / (male + female);
@@ -271,133 +279,150 @@ gender(urls)
 
 
 //-----Raymond's server.js code put into a function------
-function loadURL(arrayPagesToPass)
+loadURL(START_URL);
+
+function loadURL(START_URL)
 {
     // console.log("in loadURL pages passed in are " + JSON.stringify(arrayPagesToPass));
 
-    var arrayPagesToPassLength = arrayPagesToPass.length;
-    console.log("in load url, the array length is " + arrayPagesToPassLength);
+    // var arrayPagesToPassLength = arrayPagesToPass.length;
+    // console.log("in load url, the array length is " + arrayPagesToPassLength);
 
-    for(var i = 0; i < 2; i++)
-    {
-        console.log(arrayPagesToPass[i]);
+    // for(var i = 0; i < 2; i++)
+    // {
+    //     console.log(arrayPagesToPass[i]);
 
-        console.log("\nin loadURL the next page is " + arrayPagesToPass[i]);
-        // var scraper = new Scraper(arrayPagesToPass[i]);
+    //     console.log("\nin loadURL the next page is " + arrayPagesToPass[i]);
+    //     // var scraper = new Scraper(arrayPagesToPass[i]);
 
-        getImageUrls(arrayPagesToPass[i])
-        .then(function(images) {
-        console.log('Images found', images.length);
+    //     getImageUrls(arrayPagesToPass[i])
+    //     .then(function(images) {
+    //     console.log('Images found', images.length);
 
-        // for(var index = 0; index < 5; index++)
-        // {
-        //     // console.log(images[index].url);
-        //     urls.push(images[index].url);
-        // }
+    //     // for(var index = 0; index < 5; index++)
+    //     // {
+    //     //     // console.log(images[index].url);
+    //     //     urls.push(images[index].url);
+    //     // }
 
-        // console.log("\n urls array has " + JSON.stringify(urls));
+    //     // console.log("\n urls array has " + JSON.stringify(urls));
         
-        urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
+    //     urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
 
-        runClarifai(urls);
+    //     runClarifai(urls);
 
-        })
-        .catch(function(e) {
-        // console.log('ERROR', e);
-            throw(e);
-        })
+    //     })
+    //     .catch(function(e) {
+    //     // console.log('ERROR', e);
+    //         throw(e);
+    //     })
+    // }
 
-    
+    getImageUrls(START_URL)
+    .then(function(images) {
+    console.log('Images found', images.length);
 
+    for(var index = 0; index < images.length; index++)
+    {
+        console.log(images[index].url);
+        //urls.push(images[index].url);
     }
+
+    runClarifai(urls)
+    })
+    .catch(function(e) {
+    console.log('ERROR', e);
+    })
+
+
 };
 //----------end of server.js code-------
 
-pagesToVisit.push(START_URL);
-crawl();
+// pagesToVisit.push(START_URL);
+// crawl();
 
-function crawl() {
-    if(numPagesVisited >= MAX_PAGES_TO_VISIT) {
-      console.log("Reached max limit of number of pages to visit.");
+// function crawl() {
+//     if(numPagesVisited >= MAX_PAGES_TO_VISIT) {
+//       console.log("Reached max limit of number of pages to visit.");
 
-      console.log("\nin crawl pages passed in are " + JSON.stringify(pagesToPass));
-      loadURL(pagesToPass);
-      return;
-    }
+//       console.log("\nin crawl pages passed in are " + JSON.stringify(pagesToPass));
+//       loadURL(pagesToPass);
+//       return;
+//     }
 
-    var nextPage = pagesToVisit.pop();
+//     var nextPage = pagesToVisit.pop();
     
-    console.log("the next page is " + nextPage);
-    if (!nextPage) {
-        // We're done!
-        console.log('Crawl complete!');
-    } 
-    else if (nextPage in pagesVisited) {
-      // We've already visited this page, so repeat the crawl
+//     console.log("the next page is " + nextPage);
+//     if (!nextPage) {
+//         // We're done!
+//         console.log('Crawl complete!');
+//     } 
+//     else if (nextPage in pagesVisited) {
+//       // We've already visited this page, so repeat the crawl
       
-    //   console.log("pages visited are " + JSON.stringify(pagesVisited));
+//     //   console.log("pages visited are " + JSON.stringify(pagesVisited));
 
-      crawl();
-    } else {
-      // New page we haven't visited
-    //   loadURL(nextPage);
-      visitPage(nextPage, crawl);
-    }
-  }
+//       crawl();
+//     } else {
+//       // New page we haven't visited
+//     //   loadURL(nextPage);
+//       visitPage(nextPage, crawl);
+//     }
+//   }
   
-  function visitPage(url, callback) {
-    // // Add page to our set
-    // pagesVisited[url] = true;
-    // numPagesVisited++;
+//   function visitPage(url, callback) {
+//     // // Add page to our set
+//     // pagesVisited[url] = true;
+//     // numPagesVisited++;
   
-    // Make the request
-    console.log("\nnumber of pages visited is " + numPagesVisited);
+//     // Make the request
+//     console.log("\nnumber of pages visited is " + numPagesVisited);
 
-    console.log("Visiting page " + url);
+//     console.log("Visiting page " + url);
 
-    pagesToPass[numPagesVisited] = url;
-    console.log("pages to pass are " + JSON.stringify(pagesToPass));
+//     pagesToPass[numPagesVisited] = url;
+//     console.log("pages to pass are " + JSON.stringify(pagesToPass));
 
-    // Add page to our set
-    pagesVisited[url] = true;
-    numPagesVisited++;
-
-
-    console.log("pages visited are " + JSON.stringify(pagesVisited));
+//     // Add page to our set
+//     pagesVisited[url] = true;
+//     numPagesVisited++;
 
 
-    request(url, function(error, response, body) {
-       // Check status code (200 is HTTP OK)
-       console.log("Status code: " + response.statusCode);
-       if(response.statusCode !== 200) {
-         callback();
-         return;
-       }
-       // Parse the document body
-       var $ = cheerio.load(body);
-       var isWordFound = searchForWord($, SEARCH_WORD);
-       if(isWordFound) {
-         console.log('Word ' + SEARCH_WORD + ' found at page ' + url);
-       } else {
-         collectInternalLinks($);
-         // In this short program, our callback is just calling crawl()
-         callback();
-       }
-    });
-  }
+//     console.log("pages visited are " + JSON.stringify(pagesVisited));
 
-  function searchForWord($, word) {
-    var bodyText = $('html > body').text().toLowerCase();
-    return(bodyText.indexOf(word.toLowerCase()) !== -1);
-  }
+
+//     request(url, function(error, response, body) {
+//        // Check status code (200 is HTTP OK)
+//        console.log("Status code: " + response.statusCode);
+//        if(response.statusCode !== 200) {
+//          callback();
+//          return;
+//        }
+//        // Parse the document body
+//        var $ = cheerio.load(body);
+//        var isWordFound = searchForWord($, SEARCH_WORD);
+//        if(isWordFound) {
+//          console.log('Word ' + SEARCH_WORD + ' found at page ' + url);
+//        } else {
+//          collectInternalLinks($);
+//          // In this short program, our callback is just calling crawl()
+//          callback();
+//        }
+//     });
+//   }
+
+//   function searchForWord($, word) {
+//     var bodyText = $('html > body').text().toLowerCase();
+//     return(bodyText.indexOf(word.toLowerCase()) !== -1);
+//   }
   
-  function collectInternalLinks($) {
-      var relativeLinks = $("a[href^='/']");
-      console.log("Found " + relativeLinks.length + " relative links on page");
-      relativeLinks.each(function() {
-          pagesToVisit.push(baseUrl + $(this).attr('href'));
-      });
-  }
+//   function collectInternalLinks($) {
+//       var relativeLinks = $("a[href^='/']");
+//       console.log("Found " + relativeLinks.length + " relative links on page");
+//       relativeLinks.each(function() {
+//           pagesToVisit.push(baseUrl + $(this).attr('href'));
+//       });
+//   }
 
 
 
