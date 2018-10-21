@@ -586,4 +586,9 @@ a:hover {
   .login .tab, .login .tabcontent {
     width: 100%;
   }
+
+  .compare ul li{
+    width: 300px !important;
+    margin: 20px auto;
+  }
 }
