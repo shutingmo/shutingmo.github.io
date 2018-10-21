@@ -1,16 +1,46 @@
+const express = require('express');
+const app = express();
+var path = require('path');
+const bodyParser = require('body-parser');
+var Scraper = require("image-scraper");
 
+var request = require('request');
+var cheerio = require('cheerio');
+var URL = require('url-parse');
+
+var getImageUrls = require('get-image-urls');
 
 const Clarifai = require('clarifai');
 const math = require('mathjs')
 
-const app = new Clarifai.App({
+const appp = new Clarifai.App({
  apiKey: '1fb691efd3a74e3cb297b8d3577a6d37'
 });
 
+var START_URL = "https://www.gatech.edu/prospective-students";
+var SEARCH_WORD = "stemming";
+var MAX_PAGES_TO_VISIT = 5;
+var pagesVisited = {};
+var numPagesVisited = 0;
+var pagesToVisit = [];
+var url = new URL(START_URL);
+var baseUrl = url.protocol + "//" + url.hostname;
+var pagesToPass = [];
 
-var urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg", "https://samples.clarifai.com/demographics.jpg", "http://soappotions.com/wp-content/uploads/2017/10/orange.jpg", "https://amp.businessinsider.com/images/58c30d70c14077f2158b45a0-750-563.jpg","http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg", "https://samples.clarifai.com/demographics.jpg", "http://soappotions.com/wp-content/uploads/2017/10/orange.jpg", "https://amp.businessinsider.com/images/58c30d70c14077f2158b45a0-750-563.jpg", "https://samples.clarifai.com/demographics.jpg"];
-var url = "https://samples.clarifai.com/demographics.jpg";
 
+var urls = ["https://www.gatech.edu/sites/default/files/images/headings/georgia-tech-prospective-students-.jpg",
+"https://www.gatech.edu/sites/default/files/uploads/images/superblock_images/learning-block.jpg"
+, "https://www.gatech.edu/sites/default/files/uploads/images/superblock_images/students-dining.png",
+"https://www.gatech.edu/sites/default/files/uploads/images/superblock_images/student_support_system_sm.png",
+"https://www.gatech.edu/sites/default/files/uploads/images/superblock_images/student_research_and_entrepreneurship_sm.png"];
+
+var urls2 = ["https://admissions.ufl.edu/img/recruitment-2018/GIB.jpg",
+"http://www.ufl.edu/media/wwwufledu/images/alumni/alumni_3.jpg",
+"http://www.ufl.edu/media/wwwufledu/images/athletics/athletics_1_student_life.jpg",
+"http://www.ufl.edu/media/wwwufledu/images/research/innovation_1.jpg",
+"http://www.ufl.edu/media/wwwufledu/images/research/innovation_3.jpg"];
+
+var urlloading = [];
 
 async function analyze(urls)
 {
@@ -35,7 +65,7 @@ async function analyze(urls)
     for(var w = 0; w < urls.length;  w ++)
     {
         try {
-          const response = await app.models.predict("c0c0ac362b03416da06ab3fa36fb58e3", urls[w]);
+          const response = await appp.models.predict("c0c0ac362b03416da06ab3fa36fb58e3", urls[w]);
 
           for (i in response.outputs[0].data.regions)
           {
@@ -180,9 +210,47 @@ async function analyze(urls)
         console.log("Age Score: " + ageScore);
       }
 }
+function loadURL(arrayPagesToPass)
+{
+    console.log("in loadURL pages passed in are " + JSON.stringify(arrayPagesToPass));
+
+    var arrayPagesToPassLength = arrayPagesToPass.length;
+    console.log("in load url, the array length is " + arrayPagesToPassLength);
+
+    for(var i = 0; i < 2; i++)
+    {
+        console.log(arrayPagesToPass[i]);
+
+        console.log("\nin loadURL the next page is " + arrayPagesToPass[i]);
+        // var scraper = new Scraper(arrayPagesToPass[i]);
+
+        getImageUrls(arrayPagesToPass[i])
+        .then(function(images) {
+        console.log('Images found', images.length);
+
+        for(var index = 0; index < 5; index++)
+        {
+            console.log(images[index].url);
+            urlloading.push(images[index].url);
+        }
+
+        console.log("\n urls array has " + JSON.stringify(urls));
+
+        urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b4-1190-625/the-9-youngest-self-made-female-billionaires-in-the-world.jpg", "https://samples.clarifai.com/demographics.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Dwight_Howard_30483967610.jpg/1200px-Dwight_Howard_30483967610.jpg"];
+
+        analyze(urlloading);
+
+        })
+        .catch(function(e) {
+        console.log('ERROR', e);
+        })
 
 
 
 
 
-analyze(urls)
+    }
+};
+loadURL(START_URL);
+analyze(urls);
+analyze(urls2);
