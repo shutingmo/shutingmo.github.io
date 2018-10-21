@@ -12,7 +12,7 @@ var urls = ["http://static5.uk.businessinsider.com/image/58c29a46e21a9a28008b47b
 var url = "https://samples.clarifai.com/demographics.jpg";
 
 
-async function gender(urls)
+async function analyze(urls)
 {
     var gender = [];
     var male = 0;
@@ -185,6 +185,4 @@ async function gender(urls)
 
 
 
-gender(urls)
-//race(urls)
-//age(urls)
+analyze(urls)
