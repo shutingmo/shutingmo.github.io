@@ -573,12 +573,6 @@ a:hover {
   }
 
   .return h3, .compare h3 {
-    text-align: center;
-    margin:0 auto;
-    margin-bottom: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     max-width: 800px;
   }
 
