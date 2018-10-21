@@ -8,9 +8,15 @@
   <link rel="icon" href="assets/favicon.png" />
   </head>
   <body>
+    <div id="loading">
+      <div style="width: 100%; text-align: center;">
+        <img src="assets/loading.gif" alt="loading" />
+        <p style="color: white;">Hang tight!</p>
+      </div>
+    </div>
     <div class="return">
-      <h3>https://www.gatech.edu/prospective-students</h3>
       <h1>ValYou Scores:</h1>
+      <h3 style="margin-top: 15px;">https://www.gatech.edu/prospective-students</h3>
       <div class="cards" style="margin-top: 30px;">
         <ul>
           <li>
@@ -34,8 +40,8 @@
         </ul>
       </div>
       <form action="compare.html">
-        <input type="text" placeholder="Enter another company URL (https://example.com)" maxlength="1000"/><br />
-        <button class="button" onclick="location.href='compare.html'">Compare</button>
+        <input type="text" required placeholder="Enter another company URL (https://example.com)" maxlength="1000"/><br />
+        <button class="button" type="submit">Compare</button>
       </form>
     </div>
     <!--- Pop Up Box starts here  -->
@@ -82,6 +88,22 @@
       <h1>ValYou</h1>
       <p>Made with ❤️ at HackGT 2018</p>
     </div>
+    <script type="text/javascript">
+    (function(){
+      var myDiv = document.getElementById("loading"),
+
+        show = function(){
+          myDiv.style.display = "block";
+          setTimeout(hide, 4000); // 5 seconds
+        },
+
+        hide = function(){
+          myDiv.style.display = "none";
+        };
+
+      show();
+    })();
+  </script>
     <script type="text/javascript">
 			function showDialog() {
 				document.getElementById("loginwrap").style.display = "block";

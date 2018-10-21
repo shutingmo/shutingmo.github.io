@@ -8,6 +8,12 @@
   <link rel="icon" href="assets/favicon.png" />
   </head>
   <body>
+    <div id="loading">
+      <div style="width: 100%; text-align: center;">
+        <img src="assets/loading.gif" alt="loading" />
+        <p style="color: white;">Just a sec!</p>
+      </div>
+    </div>
     <div class="compare">
       <h1>ValYou Scores:</h1>
       <div class="container">
@@ -173,6 +179,22 @@
       <h1>ValYou</h1>
       <p>Made with ❤️ at HackGT 2018</p>
     </div>
+    <script type="text/javascript">
+    (function(){
+      var myDiv = document.getElementById("loading"),
+
+        show = function(){
+          myDiv.style.display = "block";
+          setTimeout(hide, 4000); // 5 seconds
+        },
+
+        hide = function(){
+          myDiv.style.display = "none";
+        };
+
+      show();
+    })();
+  </script>
     <script type="text/javascript">
 			function showDialog() {
 				document.getElementById("loginwrap").style.display = "block";
