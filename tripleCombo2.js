@@ -1,7 +1,7 @@
 //---------From Raymond server.js---------
 const express = require('express');
 const app = express();
-const path = require('path');
+var path = require('path');
 const bodyParser = require('body-parser');
 var Scraper = require("image-scraper");
 
@@ -11,7 +11,7 @@ var cheerio = require('cheerio');
 var URL = require('url-parse');
 
 //-------Code that runs through relative links-------
-var START_URL = "https://www.billboard.com/";
+var START_URL = "https://www.microsoft.com/en-us/";
 var SEARCH_WORD = "stemming";
 var MAX_PAGES_TO_VISIT = 5;
 var pagesVisited = {};
@@ -19,6 +19,7 @@ var numPagesVisited = 0;
 var pagesToVisit = [];
 var url = new URL(START_URL);
 var baseUrl = url.protocol + "//" + url.hostname;
+var pagesToPass = [];
 
 //-------Eric's code for Clarifai----------------
 
@@ -51,6 +52,8 @@ var old = 0;
 
 
 //----------start of clarifai.js code---------
+//might need to change urls parameter, maybe doesn't know it's an array
+
 function runClarifai(urls)
 {
   for(x in urls)
@@ -166,18 +169,21 @@ function runClarifai(urls)
 //----------end of clarifair.js code----------
 
 
-pagesToVisit.push(START_URL);
-crawl();
+// pagesToVisit.push(START_URL);
+// crawl();
 
 //-----Raymond's server.js code put into a function------
-function loadURL(nextPage)
+function loadURL(arrayPagesToPass)
 {
-    if(!nextPage)
+    console.log("in loadURL pages passed in are " + JSON.stringify(arrayPagesToPass));
+
+    var arrayPagesToPassLength = arrayPagesToPass.length;
+    console.log("in load url, the array length is " + arrayPagesToPassLength);
+
+    for(var i = 0; i < 2; i++)
     {
-        console.log("nextPag is null!")
-    }
-    else
-    {
+        console.log(arrayPagesToPass[i]);
+
         app.use(bodyParser.json());
 
         app.use('/', express.static(path.join(__dirname, 'dist')));
@@ -186,18 +192,29 @@ function loadURL(nextPage)
             res.sendFile(path.join(__dirname, 'dist/index.html'));
         });
     
-        console.log("in loadURL the next page is " + nextPage);
-        var scraper = new Scraper(nextPage);
+        console.log("in loadURL the next page is " + arrayPagesToPass[i]);
+        var scraper = new Scraper(arrayPagesToPass[i]);
     
     
         scraper.scrape(function(image){
             console.log("\n the image address is " + image.address + "\n");
             
-            runClarifai(image.address);
+            if(!image.address)
+            {
+                throw new TypeError('Path must be a string. Received ' + inspect(path));
+            }
+            else
+            {
+                // runClarifai(image.address);
+
+            }
         })
         
-        app.listen(8080, () => console.log('listening'))
+        // app.listen(8080, () => console.log('listening'))
+
     }
+        
+    
     
 };
 //----------end of server.js code-------
@@ -208,6 +225,9 @@ crawl();
 function crawl() {
     if(numPagesVisited >= MAX_PAGES_TO_VISIT) {
       console.log("Reached max limit of number of pages to visit.");
+
+      console.log("\nin crawl pages passed in are " + JSON.stringify(pagesToPass));
+      loadURL(pagesToPass);
       return;
     }
 
@@ -220,6 +240,9 @@ function crawl() {
     } 
     else if (nextPage in pagesVisited) {
       // We've already visited this page, so repeat the crawl
+      
+    //   console.log("pages visited are " + JSON.stringify(pagesVisited));
+
       crawl();
     } else {
       // New page we haven't visited
@@ -229,12 +252,26 @@ function crawl() {
   }
   
   function visitPage(url, callback) {
+    // // Add page to our set
+    // pagesVisited[url] = true;
+    // numPagesVisited++;
+  
+    // Make the request
+    console.log("\nnumber of pages visited is " + numPagesVisited);
+
+    console.log("Visiting page " + url);
+
+    pagesToPass[numPagesVisited] = url;
+    console.log("pages to pass are " + JSON.stringify(pagesToPass));
+
     // Add page to our set
     pagesVisited[url] = true;
     numPagesVisited++;
-  
-    // Make the request
-    console.log("Visiting page " + url);
+
+
+    console.log("pages visited are " + JSON.stringify(pagesVisited));
+
+
     request(url, function(error, response, body) {
        // Check status code (200 is HTTP OK)
        console.log("Status code: " + response.statusCode);
