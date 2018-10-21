@@ -88,6 +88,12 @@ a:hover {
   margin: auto 5px;
 }
 
+.hero {
+  width: 120px !important;
+  height: auto;
+  margin-bottom: -10px;
+}
+
 .landing {
   width: 100%;
   position: relative;
@@ -105,12 +111,6 @@ a:hover {
   font-size: 70px;
   color: #444;
   margin-bottom: 10px;
-}
-
-.hero {
-  width: 120px;
-  height: auto;
-  margin-bottom: -10px;
 }
 
 .button {
